@@ -22,7 +22,7 @@ The **Employee Management System (EMS)** is a full-stack web application designe
 
 1. Clone the repository:
    ```bash
-   git clone 
+   git clone https://github.com/Shridharpatil2024/EMS-System.git
 
 2. Backend:
    cd backend
