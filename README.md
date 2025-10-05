@@ -36,14 +36,14 @@ The **Employee Management System (EMS)** is a full-stack web application designe
 
 
 ## Folder Structure
-
+```
 Main-folder/
 │
 ├── backend/          # Node.js / Express server
 ├── frontend/         # Angular frontend
 ├── README.md
 └── .gitignore
-
+```
 ## Future Enhancements
 
 - Email notifications for leave approvals.
