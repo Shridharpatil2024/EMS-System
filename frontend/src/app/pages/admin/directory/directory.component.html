@@ -1,0 +1,75 @@
+<div class="p-4 sm:p-8 min-h-screen bg-gray-100">
+  <div class="flex justify-between items-center mb-4 max-w-6xl mx-auto">
+    <h1 class="text-4xl font-semibold uppercase">Employee Directory</h1>
+    <button (click)="showForm = true" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+      Add Employee
+    </button>
+  </div>
+
+  <div *ngIf="showForm" class="max-w-6xl mx-auto bg-white rounded-xl border shadow-md p-6 mb-4">
+    <h2 class="text-2xl font-semibold mb-4 text-center">{{ isEditing ? 'Edit' : 'Add' }} Employee</h2>
+    <div class="flex flex-col gap-4">
+      <input [(ngModel)]="formData.name" type="text" placeholder="Name" class="px-3 py-2 border border-gray-300 rounded-lg w-full">
+      <input [(ngModel)]="formData.email" type="email" placeholder="Email" class="px-3 py-2 border border-gray-300 rounded-lg w-full" [readonly]="isEditing">
+      <input [(ngModel)]="formData.password" type="password" placeholder="Set Password" class="px-3 py-2 border border-gray-300 rounded-lg w-full">
+      <input [(ngModel)]="formData.phone" type="text" placeholder="Phone" class="px-3 py-2 border border-gray-300 rounded-lg w-full">
+      <input [(ngModel)]="formData.department" type="text" placeholder="Department" class="px-3 py-2 border border-gray-300 rounded-lg w-full">
+      <input [(ngModel)]="formData.designation" type="text" placeholder="Designation" class="px-3 py-2 border border-gray-300 rounded-lg w-full">
+
+      <div class="flex gap-2">
+        <button (click)="saveEmployee()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition w-full">
+          {{ isEditing ? 'Update' : 'Add' }}
+        </button>
+        <button (click)="resetForm()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition w-full">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!showForm" class="max-w-6xl mx-auto bg-white rounded-xl border shadow-md overflow-hidden">
+    <div class="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2 border-b">
+      <input [(ngModel)]="searchTerm" (input)="applyFilters()" type="text" placeholder="Search by name, email, department..." class="px-3 py-2 border border-gray-300 rounded-lg w-full md:w-1/3">
+      <select [(ngModel)]="selectedDepartment" (change)="applyFilters()" class="px-3 py-2 border border-gray-300 rounded-lg w-full md:w-1/4">
+        <option>All Departments</option>
+        <option>IT</option>
+        <option>HR</option>
+        <option>Finance</option>
+        <option>Marketing</option>
+      </select>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-blue-500">
+          <tr>
+            <th class="px-6 py-4 text-left text-white uppercase font-semibold">Name</th>
+            <th class="px-6 py-4 text-left text-white uppercase font-semibold">Email</th>
+            <th class="px-6 py-4 text-left text-white uppercase font-semibold">Phone</th>
+            <th class="px-6 py-4 text-left text-white uppercase font-semibold">Department</th>
+            <th class="px-6 py-4 text-left text-white uppercase font-semibold">Designation</th>
+            <th class="px-6 py-4 text-center text-white uppercase font-semibold">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let emp of filteredEmployees" class="bg-gray-50 hover:bg-gray-100 transition">
+            <td class="px-6 py-4 whitespace-nowrap">{{ emp.name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ emp.email }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ emp.phone }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ emp.department }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ emp.designation }}</td>
+            <td class="px-6 py-4 whitespace-nowrap flex justify-center gap-2">
+              <button (click)="editEmployee(emp)" class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 text-sm transition">Edit</button>
+              <button (click)="deleteEmployee(emp.email)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm transition">Delete</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredEmployees.length === 0">
+            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No employees found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

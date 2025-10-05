@@ -1,0 +1,79 @@
+<ng-container *ngIf="showAppShell$ | async">
+  <header>
+    <mat-toolbar class="bg-blue-500!">
+      <button (click)="drawer.toggle()" mat-icon-button class="text-white!" aria-label="Toggle sidebar menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="text-white!">Employee Management System</span>
+      <span class="example-spacer flex-grow"></span>
+      <button mat-flat-button class="text-white bg-red-600 hover:bg-red-700 transition-colors duration-300"
+        (click)="logout()">
+        <mat-icon class="mr-1">exit_to_app</mat-icon>
+        Logout
+      </button>
+    </mat-toolbar>
+  </header>
+
+  <mat-drawer-container class="">
+    <mat-drawer #drawer class="!w-[300px] bg-white shadow-xl" [mode]="'side'" [opened]="true">
+      <div class="flex flex-col gap-2 p-4">
+
+        <a *ngIf="userRole !== 'admin'" routerLink="/home"
+          routerLinkActive="bg-blue-600 text-white shadow-md pointer-events-none"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link w-full text-left text-[#1e40af] font-semibold py-3 px-4 rounded-lg transition-all duration-300 hover:bg-blue-100 hover:scale-105 hover:text-blue-700">
+          Home
+        </a>
+
+        <a *ngIf="userRole !== 'admin'" routerLink="/departments"
+          routerLinkActive="bg-blue-600 text-white shadow-md pointer-events-none"
+          class="nav-link w-full text-left text-[#1e40af] font-semibold py-3 px-4 rounded-lg transition-all duration-300 hover:bg-blue-100 hover:scale-105 hover:text-blue-700">
+          Departments
+        </a>
+
+        <a *ngIf="userRole !== 'admin'" routerLink="/leaves"
+          routerLinkActive="bg-blue-600 text-white shadow-md pointer-events-none"
+          class="nav-link w-full text-left text-[#1e40af] font-semibold py-3 px-4 rounded-lg transition-all duration-300 hover:bg-blue-100 hover:scale-105 hover:text-blue-700">
+          Leaves
+        </a>
+
+        <a *ngIf="userRole === 'admin'" routerLink="/admin/home"
+          routerLinkActive="bg-blue-600 text-white shadow-md pointer-events-none"
+          class="nav-link w-full text-left text-[#1e40af] font-semibold py-3 px-4 rounded-lg transition-all duration-300 hover:bg-blue-100 hover:scale-105 hover:text-blue-700">
+          Admin Home
+        </a>
+
+        <a *ngIf="userRole === 'admin'" routerLink="/admin/departments"
+          routerLinkActive="bg-blue-600 text-white shadow-md pointer-events-none"
+          class="nav-link w-full text-left text-[#1e40af] font-semibold py-3 px-4 rounded-lg transition-all duration-300 hover:bg-blue-100 hover:scale-105 hover:text-blue-700">
+          Admin Departments
+        </a>
+
+        <a *ngIf="userRole === 'admin'" routerLink="/admin/directory"
+          routerLinkActive="bg-blue-600 text-white shadow-md pointer-events-none"
+          class="nav-link w-full text-left text-[#1e40af] font-semibold py-3 px-4 rounded-lg transition-all duration-300 hover:bg-blue-100 hover:scale-105 hover:text-blue-700">
+          Directory
+        </a>
+
+        <a *ngIf="userRole === 'admin'" routerLink="/admin/leave-requests"
+          routerLinkActive="bg-blue-600 text-white shadow-md pointer-events-none"
+          class="nav-link w-full text-left text-[#1e40af] font-semibold py-3 px-4 rounded-lg transition-all duration-300 hover:bg-blue-100 hover:scale-105 hover:text-blue-700">
+          Leave Requests
+        </a>
+
+      </div>
+    </mat-drawer>
+
+    <mat-drawer-content>
+      <main class="min-h-screen bg-gray-100">
+        <router-outlet></router-outlet>
+      </main>
+    </mat-drawer-content>
+  </mat-drawer-container>
+
+  <footer></footer>
+</ng-container>
+
+<ng-container *ngIf="!(showAppShell$ | async)">
+  <router-outlet></router-outlet>
+</ng-container>

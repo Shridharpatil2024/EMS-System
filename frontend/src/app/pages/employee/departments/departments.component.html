@@ -1,0 +1,53 @@
+<div class="p-4 sm:p-8 min-h-screen bg-gray-100">
+
+  <h1 class="text-4xl font-bold mb-12 text-center uppercase text-gray-800 tracking-wide">
+    Departments
+  </h1>
+
+  <div *ngIf="!dataLoaded" class="w-full flex justify-center py-20">
+    <svg class="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  </div>
+
+  <div *ngIf="dataLoaded" class="max-w-5xl mx-auto bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-lg">
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-blue-500">
+          <tr>
+            <th scope="col"
+              class="px-6 py-4 text-left text-sm font-semibold uppercase text-white tracking-wide">
+              Department Name
+            </th>
+            <th scope="col"
+              class="px-6 py-4 text-right text-sm font-semibold uppercase text-white tracking-wide">
+              Number of Employees
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="bg-white divide-y divide-gray-200">
+
+          <tr *ngFor="let dept of departments" class="hover:bg-gray-100 transition-colors duration-300">
+            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-800">
+              {{ dept.name }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-gray-800">
+              {{ dept.employeeCount }}
+            </td>
+          </tr>
+
+          <tr *ngIf="!departments || departments.length === 0" class="bg-gray-50">
+            <td colspan="2" class="text-center py-6 text-gray-600 font-medium">
+              No departments found.
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

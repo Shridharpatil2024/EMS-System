@@ -1,0 +1,60 @@
+<div class="p-4 sm:p-8 min-h-screen bg-gray-100 relative">
+
+  <div class="flex justify-between items-center mb-4 max-w-4xl mx-auto">
+    <h1 class="text-4xl font-semibold uppercase">Departments</h1>
+    
+    <button (click)="!showForm && toggleForm()" 
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+      Add Department
+    </button>
+  </div>
+
+  <div *ngIf="showForm" class="max-w-4xl mx-auto mb-4 overflow-hidden transition-all duration-500">
+    <div class="bg-white rounded-xl border shadow-md p-6 w-full">
+      <div class="flex flex-col gap-4">
+        <input type="text" placeholder="Department Name" [(ngModel)]="newDeptName"
+          class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+        <input type="number" placeholder="Number of Employees" [(ngModel)]="newDeptEmployees"
+          class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+        
+        <div class="flex gap-4">
+          <button (click)="addDepartment()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition w-full">
+            {{ editingDept ? 'Update' : 'Add' }}
+          </button>
+          
+          <button (click)="toggleForm()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition w-full">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!showForm" class="max-w-4xl mx-auto bg-white rounded-xl border overflow-hidden shadow-md transition-opacity duration-500">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-blue-500">
+          <tr>
+            <th class="px-6 py-4 text-left text-sm font-semibold uppercase text-white">Department Name</th>
+            <th class="px-6 py-4 text-right text-sm font-semibold uppercase text-white">Number of Employees</th>
+            <th class="px-6 py-4 text-center text-sm font-semibold uppercase text-white">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let dept of departments" class="bg-gray-50 hover:bg-gray-100 transition">
+            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-800">{{ dept.name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-gray-800">{{ dept.employeeCount }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-center flex justify-center gap-2">
+              <button (click)="editDepartment(dept)" class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 text-sm transition">Edit</button>
+              <button (click)="deleteDepartment(dept)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm transition">Delete</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="departments.length === 0">
+            <td colspan="3" class="px-6 py-4 text-center text-gray-500">No departments found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

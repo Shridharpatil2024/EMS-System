@@ -1,0 +1,137 @@
+<div class="p-4 sm:p-8 min-h-screen bg-gray-100 flex flex-col gap-6">
+
+  <div *ngIf="!pageLoaded" class="w-full flex justify-center py-40">
+    <svg class="animate-spin h-12 w-12 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+      viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+      </path>
+    </svg>
+  </div>
+
+  <div *ngIf="pageLoaded" [hidden]="showEditModal"
+    class="w-full max-w-7xl mx-auto grid grid-cols-1 gap-6 md:grid-cols-2">
+
+
+    <div
+      class="flex-1 bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300 border-b-4 border-blue-500">
+      <h2 class="text-xl font-semibold mb-3 text-gray-800">Daily Attendance Tracker</h2>
+      <p class="text-sm text-gray-500 mb-4 text-center max-w-xs">
+        Tap below to log your start or end time for the current workday.
+      </p>
+
+      <button (click)="markAttendance()"
+        [ngClass]="attendanceMarked ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'"
+        class="text-white px-4 py-2 rounded-lg transition font-semibold mt-2">
+        {{ attendanceMarked ? 'Attendance Marked' : 'Mark Now' }}
+      </button>
+    </div>
+
+    <div
+      class="bg-white shadow-lg rounded-xl p-6 flex flex-col justify-between hover:scale-105 transition-transform duration-300 hover:shadow-xl border-b-4 border-green-500">
+      <h2 class="text-2xl font-semibold mb-4 text-center text-green-700">Today's Presence</h2>
+      <div class="space-y-3 p-2">
+        <p class="flex justify-between text-base text-gray-700 border-b pb-2">
+          <span class="font-medium">Present:</span>
+          <span class="font-bold text-green-600">{{ presence.present }}</span>
+        </p>
+        <p class="flex justify-between text-base text-gray-700 border-b pb-2">
+          <span class="font-medium">On Leave:</span>
+          <span class="font-bold text-yellow-600">{{ presence.onLeave }}</span>
+        </p>
+        <p class="flex justify-between text-base text-gray-700">
+          <span class="font-medium">Not Marked:</span>
+          <span class="font-bold text-red-600">{{ presence.notMarked }}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="md:col-span-2 flex justify-center">
+      <div
+        class="w-full max-w-lg bg-white shadow-lg rounded-xl p-6 flex flex-col items-center gap-4 hover:scale-105 transition-transform duration-300 border-t-4 border-yellow-500">
+        <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Admin Profile</h2>
+
+        <img 
+          [src]="previewUrl || admin.profileImage || defaultProfileImage"
+          alt="Admin Profile"
+          class="w-24 h-24 rounded-full border-4 border-black object-cover shadow-md hover:scale-110 transition-transform duration-300">
+
+        <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-gray-700 text-left">
+          <p><span class="font-semibold">Name:</span> {{ admin.name }}</p>
+          <p><span class="font-semibold">Designation:</span> {{ admin.designation }}</p>
+          <p><span class="font-semibold">Email:</span> {{ admin.email }}</p>
+          <p><span class="font-semibold">Phone:</span> {{ admin.phone }}</p>
+          <p><span class="font-semibold">Department:</span> {{ admin.department }}</p>
+        </div>
+
+        <div class="flex justify-center mt-4">
+          <button (click)="openEditModal()"
+            class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 transition">
+            Edit Profile
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="showEditModal">
+    <div class="w-full flex justify-center">
+      <div class="w-full max-w-md space-y-4 bg-white p-6 rounded-lg shadow-xl">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Edit Admin Profile</h3>
+
+        <form (ngSubmit)="saveProfile()" class="w-full space-y-4">
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Name</label>
+              <input [(ngModel)]="editForm.name" name="editName" type="text" placeholder="Name"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Designation</label>
+              <input [(ngModel)]="editForm.designation" name="editDesignation" type="text" placeholder="Designation"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Phone</label>
+              <input [(ngModel)]="editForm.phone" name="editPhone" type="tel" placeholder="+91 9876543210"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Department</label>
+              <input [(ngModel)]="editForm.department" name="editDepartment" type="text" placeholder="Department"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+          </div>
+
+          <div class="w-full flex flex-col items-center gap-2">
+            <label class="block text-sm font-medium text-gray-700">Profile Image</label>
+            <input type="file" (change)="onFileSelected($event)" accept="image/*"
+              class="block w-full text-sm text-gray-600 px-3 py-2 border border-gray-300 rounded-md">
+
+            <div class="mt-2 flex flex-col items-center">
+              <p class="text-sm text-gray-500 mb-1">Preview:</p>
+              <img [src]="previewUrl || admin.profileImage || defaultProfileImage" alt="Preview"
+                class="w-24 h-24 rounded-full border-4 border-black shadow-md object-cover hover:scale-110 transition-transform duration-300">
+            </div>
+          </div>
+
+          <div class="flex justify-end space-x-3 pt-2">
+            <button type="button" (click)="closeEditModal()"
+              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition">
+              Cancel
+            </button>
+            <button type="submit"
+              class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </ng-container>
+</div>

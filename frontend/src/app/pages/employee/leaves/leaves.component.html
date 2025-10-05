@@ -1,0 +1,132 @@
+<div class="p-4 sm:p-6 max-w-5xl mx-auto bg-gray-100 flex flex-col gap-6">
+
+  <div *ngIf="!dataLoaded" class="w-full p-12 text-center">
+    <svg class="animate-spin h-8 w-8 text-blue-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p class="text-gray-600 mt-3">Loading leave data...</p>
+  </div>
+
+
+  <ng-container *ngIf="dataLoaded">
+
+    <div *ngIf="message" [ngClass]="{
+          'bg-green-200 text-green-800': messageType==='success',
+          'bg-red-200 text-red-800': messageType==='error'
+        }" 
+        class="px-4 py-2 rounded-lg text-center font-medium">
+      {{ message }}
+    </div>
+
+
+    <div class="bg-white rounded-xl shadow-md p-4 sm:p-6 flex flex-col gap-6">
+
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1 bg-blue-500 text-white rounded-xl shadow p-4 flex flex-col items-center">
+          <h2 class="text-lg font-semibold">Total Leaves</h2>
+          <p class="text-2xl font-bold mt-1">{{ totalLeaves }}</p>
+          <p class="text-sm mt-1">Used: {{ usedLeaves }}</p>
+        </div>
+
+        <div class="flex-1 bg-green-500 text-white rounded-xl shadow p-4 flex flex-col items-center">
+          <h2 class="text-lg font-semibold">Remaining Leaves</h2>
+          <p class="text-2xl font-bold mt-1">{{ remainingLeaves }}</p>
+          <p class="text-sm mt-1">Used: {{ usedLeaves }}</p>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-semibold mb-2">Leave Breakdown</h2>
+        <div class="overflow-x-auto rounded-2xl border border-gray-200">
+          <table class="min-w-full text-sm border-collapse rounded-2xl">
+            <thead class="bg-blue-500 text-white">
+              <tr>
+                <th class="px-3 py-2 text-left font-semibold uppercase">Leave Type</th>
+                <th class="px-3 py-2 text-right font-semibold uppercase">Total</th>
+                <th class="px-3 py-2 text-right font-semibold uppercase">Left</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr *ngIf="!hasBreakdownData()">
+                <td class="px-3 py-2 text-center text-gray-500" colspan="3">No data found</td>
+              </tr>
+              <tr *ngFor="let leave of leaveBreakdown" class="bg-gray-50 hover:bg-gray-100">
+                <td class="px-3 py-2 font-medium text-gray-800">{{ leave.typeCapitalized }}</td>
+                <td class="px-3 py-2 text-right text-gray-800">{{ leave.total }}</td>
+                <td class="px-3 py-2 text-right text-gray-800">{{ leave.left }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bg-white rounded-xl shadow-md p-4 sm:p-6">
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+        <h2 class="text-lg font-semibold">Leave History</h2>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <select [(ngModel)]="selectedType"
+                  class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">All Types</option>
+            <option value="casual">Casual Leave</option>
+            <option value="sick">Sick Leave</option>
+            <option value="earned">Earned Leave</option>
+            <option value="maternity">Maternity/Paternity Leave</option>
+          </select>
+          <select [(ngModel)]="selectedStatus"
+                  class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">All Status</option>
+            <option value="approved">Approved</option>
+            <option value="pending">Pending</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-gray-200">
+        <table class="min-w-full text-sm border-collapse rounded-2xl">
+          <thead class="bg-blue-500 text-white">
+            <tr>
+              <th class="px-3 py-2 text-left font-semibold uppercase">Leave Type</th>
+              <th class="px-3 py-2 text-left font-semibold uppercase">Start Date</th>
+              <th class="px-3 py-2 text-left font-semibold uppercase">End Date</th>
+              <th class="px-3 py-2 text-right font-semibold uppercase">Total Days</th>
+              <th class="px-3 py-2 text-center font-semibold uppercase">Status</th>
+              <th class="px-3 py-2 text-center font-semibold uppercase">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr *ngIf="filteredLeaveHistory.length === 0">
+              <td class="px-3 py-2 text-center text-gray-500" colspan="6">No data found</td>
+            </tr>
+            <tr *ngFor="let leave of filteredLeaveHistory" class="bg-gray-50 hover:bg-gray-100">
+              <td class="px-3 py-2 font-medium text-gray-800">{{ leave.typeCapitalized }}</td>
+              <td class="px-3 py-2 text-gray-800">{{ leave.startDate | date:'dd-MM-yyyy' }}</td>
+              <td class="px-3 py-2 text-gray-800">{{ leave.endDate | date:'dd-MM-yyyy' }}</td>
+              <td class="px-3 py-2 text-right text-gray-800">{{ leave.totalDays }}</td>
+              <td class="px-3 py-2 text-center">
+                <span [ngClass]="{
+                  'px-2 py-1 rounded-full text-green-800 bg-green-200 text-xs font-semibold': leave.status==='approved',
+                  'px-2 py-1 rounded-full text-yellow-800 bg-yellow-200 text-xs font-semibold': leave.status==='pending',
+                  'px-2 py-1 rounded-full text-red-800 bg-red-200 text-xs font-semibold': leave.status==='rejected'
+                }">{{ leave.statusCapitalized }}</span>
+              </td>
+              <td class="px-3 py-2 text-center">
+                <button *ngIf="leave.status==='pending'" (click)="cancelLeave(leave)"
+                        class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs transition">
+                  Cancel
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </ng-container>
+
+</div>

@@ -1,0 +1,62 @@
+<div class="p-4 sm:p-8 min-h-screen bg-gray-100">
+
+  <div class="flex justify-between items-center mb-6 max-w-7xl mx-auto">
+    <h1 class="text-4xl font-semibold uppercase text-center w-full">Leave Requests</h1>
+  </div>
+
+  <div class="max-w-7xl mx-auto bg-white rounded-xl border shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-blue-600">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-white">Employee Name</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-white">Designation</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-white">Department</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-white">Leave Type</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-white">Start Date</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-white">End Date</th>
+            <th class="px-4 py-3 text-center text-xs font-semibold uppercase text-white">Action</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngIf="leaveRequests.length === 0" class="bg-gray-50">
+            <td colspan="7" class="px-4 py-3 text-center text-gray-700 font-medium">
+              No leave requests found
+            </td>
+          </tr>
+
+          <tr *ngFor="let leave of leaveRequests"
+              class="hover:bg-gray-100 transition"
+              [ngClass]="{'bg-gray-50': leaveRequests.indexOf(leave) % 2 === 0, 'bg-white': leaveRequests.indexOf(leave) % 2 !== 0}">
+
+            <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-800">{{ leave.name }}</td>
+            <td class="px-4 py-3 whitespace-nowrap text-gray-700">{{ leave.designation || '-' }}</td>
+            <td class="px-4 py-3 whitespace-nowrap text-gray-700">{{ leave.department || '-' }}</td>
+            <td class="px-4 py-3 whitespace-nowrap" [ngClass]="leaveTypeColor[leave.type]">{{ leave.type }}</td>
+            <td class="px-4 py-3 whitespace-nowrap text-gray-700">{{ leave.startDate | date }}</td>
+            <td class="px-4 py-3 whitespace-nowrap text-gray-700">{{ leave.endDate | date }}</td>
+            <td class="px-4 py-3 whitespace-nowrap text-center flex justify-center gap-2">
+              <ng-container *ngIf="leave.status === 'pending'; else statusText">
+                <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm transition"
+                        (click)="acceptLeave(leave)">
+                  Accept
+                </button>
+                <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm transition"
+                        (click)="rejectLeave(leave)">
+                  Reject
+                </button>
+              </ng-container>
+              <ng-template #statusText>
+                <span [ngClass]="leave.status === 'approved' ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
+                  {{ leave.status | titlecase }}
+                </span>
+              </ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
