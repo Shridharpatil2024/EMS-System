@@ -1,5 +1,11 @@
 # EMS-System
 
+
+| Admin Panel | Employee Panel |
+| ----------- | -------------- |
+| <img src="images/admin-image.png" width="300"/> | <img src="images/employee-image.png" width="300"/> |
+
+
 ## Project Overview
 
 The **Employee Management System (EMS)** is a full-stack web application designed to streamline and automate HR processes. It allows organizations to efficiently manage employee information, track daily attendance, handle leave requests, and maintain role-based access for admins and employees. This system is scalable, secure, and built with modern web technologies to provide a seamless user experience.
@@ -57,6 +63,7 @@ Main-folder/
 ```
 
 ## Test Cases
+
 | **Test Case ID** | **Scenario**                 | **Steps to Reproduce**                                                                                                        | **Expected Result**                                                                                |
 | ---------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | TC001            | **New User Registration**    | 1. Open the app.<br>2. Register with valid details.                                                                           | User account is created successfully and redirected to the Admin Dashboard.                        |
