@@ -3,7 +3,7 @@
 
 | Admin Panel | Employee Panel |
 | ----------- | -------------- |
-| <img src="images/admin-image.png" width="1000"/> | <img src="images/employee-image.png" width="1000"/> |
+| <img src="images/admin-image.png" width="400"/> | <img src="images/employee-image.png" width="400"/> |
 
 
 ## Project Overview
