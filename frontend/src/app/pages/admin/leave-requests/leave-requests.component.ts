@@ -25,7 +25,7 @@ export class LeaveRequestsComponent implements OnInit {
   leaveRequests: LeaveRequest[] = [];
 
   leaveTypeColor: Record<string, string> = {
-    'Sick': 'text-red-600 font-semibold',
+    'Sick Leave': 'text-red-600 font-semibold',
     'Maternity/Paternity': 'text-purple-600 font-semibold',
     'Casual': 'text-green-600 font-semibold',
     'Earned': 'text-indigo-600 font-semibold'
