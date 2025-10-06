@@ -10,11 +10,8 @@ interface Leave {
   startDate?: string;
   endDate?: string;
   totalDays?: number;
-
   total?: number;
   left?: number;
-
-
   typeCapitalized?: string;
   statusCapitalized?: string;
 }
@@ -28,29 +25,30 @@ interface Leave {
 export class LeavesComponent implements OnInit {
   email!: string;
 
-
   totalLeaves = 0;
   usedLeaves = 0;
   remainingLeaves = 0;
 
-
   leaveBreakdown: Leave[] = [];
   leaveHistory: Leave[] = [];
-
 
   selectedType = '';
   selectedStatus = '';
 
-
   message: string = '';
   messageType: 'success' | 'error' = 'success';
 
-
   dataLoaded = false;
-
-  
   private apiCallsCompleted = 0;
   private totalApiCalls = 3;
+
+  // Mapping from dropdown values to actual leave.type
+  typeMap: { [key: string]: string } = {
+    casual: 'Casual Leave',
+    sick: 'Sick Leave',
+    earned: 'Earned Leave',
+    maternity: 'Maternity/Paternity Leave'
+  };
 
   constructor(
     private leaveService: LeaveService,
@@ -136,7 +134,6 @@ export class LeavesComponent implements OnInit {
         this.fetchSummary();
         this.fetchBreakdown();
         this.fetchHistory();
-
         setTimeout(() => this.message = '', 3000);
       },
       error: (err) => {
@@ -158,8 +155,15 @@ export class LeavesComponent implements OnInit {
 
   get filteredLeaveHistory() {
     return this.leaveHistory.filter(leave => {
-      const typeMatch = this.selectedType ? leave.type.toLowerCase() === this.selectedType : true;
-      const statusMatch = this.selectedStatus ? leave.status!.toLowerCase() === this.selectedStatus : true;
+      // Map the selectedType to actual leave.type
+      const typeMatch = this.selectedType
+        ? leave.type === this.typeMap[this.selectedType]
+        : true;
+
+      const statusMatch = this.selectedStatus
+        ? leave.status!.toLowerCase() === this.selectedStatus.toLowerCase()
+        : true;
+
       return typeMatch && statusMatch;
     });
   }
